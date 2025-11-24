@@ -30,7 +30,9 @@ type ApiProduct = {
 
 export default function Home({ products = [] }: { products: Product[] }) {
   useHydrateWishlist();
-  const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlistStore();
+  const addToWishlist = useWishlistStore((s) => s.addToWishlist);
+  const removeFromWishlist = useWishlistStore((s) => s.removeFromWishlist);
+  const isInWishlist = useWishlistStore((s) => s.isInWishlist);
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-[#18181b] p-4 sm:p-8 pb-20">
@@ -52,7 +54,7 @@ export default function Home({ products = [] }: { products: Product[] }) {
                 <button
                   className="absolute top-4 right-4 bg-white rounded-full p-2 shadow hover:bg-pink-100"
                   onClick={() =>
-                    isInWishlist(product.id)
+                    (typeof isInWishlist === "function" && isInWishlist(product.id))
                       ? removeFromWishlist(product.id)
                       : addToWishlist({
                           id: product.id,
@@ -67,7 +69,7 @@ export default function Home({ products = [] }: { products: Product[] }) {
                   <svg
                     width="24"
                     height="24"
-                    fill={isInWishlist(product.id) ? "red" : "none"}
+                    fill={(typeof isInWishlist === "function" && isInWishlist(product.id)) ? "red" : "none"}
                     stroke="red"
                     strokeWidth="2"
                     viewBox="0 0 24 24"

@@ -3,9 +3,20 @@ import Footer from "../components/Footer";
 import Image from "next/image";
 import Link from "next/link";
 import useWishlistStore from "../stores/wishlistStore";
+import { useEffect, useState } from "react";
 
 export default function Wishlist() {
   const wishlist = useWishlistStore((state) => state.wishlistItems);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    // prevent showing server-side empty state before client hydration
+    return null;
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-[#18181b] p-4 sm:p-8 pb-20">

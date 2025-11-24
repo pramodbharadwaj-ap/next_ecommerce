@@ -39,7 +39,9 @@ export default function Products() {
 
   useHydrateWishlist(); // Hydrate wishlist from localStorage on client
   const addToCart = useCartStore((state) => state.addToCart);
-  const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlistStore();
+  const addToWishlist = useWishlistStore((s) => s.addToWishlist);
+  const removeFromWishlist = useWishlistStore((s) => s.removeFromWishlist);
+  const isInWishlist = useWishlistStore((s) => s.isInWishlist);
 
   // ✅ Client-side data fetching
   useEffect(() => {
@@ -207,7 +209,7 @@ export default function Products() {
               `}
               aria-label="Add to wishlist"
               onClick={() =>
-                isInWishlist(product.id)
+                (typeof isInWishlist === "function" && isInWishlist(product.id))
                   ? removeFromWishlist(product.id)
                   : addToWishlist({
                       id: product.id,
@@ -221,7 +223,7 @@ export default function Products() {
               <svg
                 width="24"
                 height="24"
-                fill={isInWishlist(product.id) ? "red" : "none"}
+                fill={(typeof isInWishlist === "function" && isInWishlist(product.id)) ? "red" : "none"}
                 stroke="red"
                 strokeWidth="2"
                 viewBox="0 0 24 24"
